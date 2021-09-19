@@ -1,0 +1,1 @@
+{"id":14,"name":"GAMOM","email":"ysy1679682327@qq.com","avatar":"\/img\/default-avatar.jpg","checkin":"2021-02-16 17:42:05","power":0,"lvl":3,"lvl_exp":5,"mscore":93,"vip":0,"vip_lv":1,"vip_exp":0,"CBHK":1,"extra":"MetaMo 只在您账户登录成功的情况下给第三方提供用户名、邮箱验证状态、头像、签名等公开信息。","code":200}
