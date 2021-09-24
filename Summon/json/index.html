@@ -1,0 +1,289 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Gamom's Website</title>
+    <link rel="stylesheet" type="text/css" href="../st_ga.css">
+    <script src="../js/gquery.js"></script>
+    <style>
+        #loading {
+            background-color: aquamarine;
+            /* color: azure; */
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        
+        * {
+            transition: 0.5s;
+            overflow-y: none;
+            overflow-x: none;
+            user-select: none;
+        }
+        
+        .center-title {
+            /* color: white; */
+            font-family: "console";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+        
+        #topicon {
+            position: absolute;
+            left: 16px;
+            top: 6px;
+            height: 48px;
+            width: 48px;
+            background-image: url("../../index/img/icon.png");
+            background-size: 100%;
+        }
+        
+        #topbar {
+            padding-left: 2em;
+            background-color: rgb(220, 252, 241);
+            width: calc(100% - 2em);
+            height: 60px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        /* #centerlog {
+            width: 200px;
+            height: 200px;
+            background-image: url("img/icon.png");
+            background-size: 100%;
+            text-align: center;
+        } */
+        
+        #index {
+            padding: 2em 2em 2em 2em;
+            background-image: linear-gradient(135deg, rgb(220, 252, 241), aquamarine);
+            width: calc(100% - 4em);
+            height: calc(100% - 4em);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        #cltext {
+            color: #333;
+        }
+        
+        #cltext:hover {
+            color: rgb(104, 104, 104);
+        }
+        
+        #textarea {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 4em 4em 4em 4em;
+            width: calc(100% - 8em);
+            height: auto;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 0;
+        }
+        
+        .button-o {
+            color: #333;
+            font-weight: bold;
+            font-family: "console";
+            font-size: 26px;
+            outline: none;
+            border: none;
+            border-bottom: 4px solid #333;
+            width: 180px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 60px;
+        }
+        
+        .button-o:hover,
+        .button-o:active {
+            color: #b6b6b6;
+            border-bottom: 4px solid #b6b6b6;
+        }
+        
+        .windows {
+            background: rgba(10, 10, 10, 0.8);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .new {
+            width: 140px;
+            height: 40px;
+            font-size: 16px;
+        }
+        
+        .new:hover {
+            transform: scale(1.05, 1.05);
+        }
+        
+        .del {
+            width: 120px;
+            height: 30px;
+            font-size: 16px;
+        }
+        
+        .del:hover {
+            transform: scale(1.05, 1.05);
+        }
+        
+        #toptitle {
+            font-size: 24px;
+            font-weight: normal;
+            line-height: 60px;
+            left: 80px;
+            display: inline-block;
+            position: absolute;
+        }
+        
+        #texts {
+            width: calc(100% - 8em);
+            height: 400px;
+            display: inline-block;
+            overflow-y: auto;
+            padding: 4em 4em 4em 4em;
+        }
+        
+        .input {
+            width: calc(100% - 8em);
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .colorSet {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+            position: relative;
+            top: 4px;
+            left: 16px;
+            border-radius: 2px;
+            border: 1px solid #333;
+        }
+        
+        .colorSet:hover {
+            transform: scale(1.3, 1.3);
+        }
+        
+        .text-top {
+            line-height: 40px;
+        }
+        
+        .colors {
+            background-color: black;
+            color: invert(100%);
+        }
+    </style>
+</head>
+
+<body bgcolor="azure">
+    <div id="index">
+        <div class="center-title" style="text-align:center;">
+            <span class="title" id="cltext">
+                JSON 文本生成器
+            </span><br /><br />
+            <span>制作者：Gamom</span><br />
+            <span>下滑开始使用</span>
+        </div>
+    </div>
+    <div id="textarea">
+        <button class="new button-blue" onclick="newTextMain();">+ 新增文本</button>
+        <div id="texts">
+            <div class="text-top">
+                <span>文本：</span>
+                <input class="enter input" placeholder="支持使用 § (颜色转义符)" />
+                <br />
+                <span>颜色：</span>
+                <input class="input colors" placeholder="1.16 + 支持自定义颜色" />
+                <div class="selcolor">
+                    <span>颜色</span>
+                    <span class="colorSet" style="background-color:black;" title="黑色" onclick="colorful(this,this.style.backgroundColor,'black','c')"></span>
+                    <span class="colorSet" style="background-color:blue;" title="蓝色" onclick="colorful(this,this.style.backgroundColor,'blue','c')"></span>
+                    <span class="colorSet" style="background-color:green;" title="深绿色" onclick="colorful(this,this.style.backgroundColor,'dark_green','c')"></span>
+                    <span class="colorSet" style="background-color:darkblue;" title="深蓝色" onclick="colorful(this,this.style.backgroundColor,'dark_blue','c')"></span>
+                    <span class="colorSet" style="background-color:DarkRed;" title="深红色" onclick="colorful(this,this.style.backgroundColor,'dark_red','')"></span>
+                    <span class="colorSet" style="background-color:purple;" title="深紫色" onclick="colorful(this,this.style.backgroundColor,'dark_purple','')"></span>
+                    <span class="colorSet" style="background-color:gold;" title="金色" onclick="colorful(this,this.style.backgroundColor,'gold','')"></span>
+                    <span class="colorSet" style="background-color:darkgray;" title="浅灰色" onclick="colorful(this,this.style.backgroundColor,'gray','c')"></span>
+                    <span class="colorSet" style="background-color:gray;" title="深灰色" onclick="colorful(this,this.style.backgroundColor,'dark_gray','c')"></span>
+                    <span class="colorSet" style="background-color:CornflowerBlue;" title="湖蓝色" onclick="colorful(this,this.style.backgroundColor,'dark_aqua','c')"></span>
+                    <span class="colorSet" style="background-color:lime;" title="绿色" onclick="colorful(this,this.style.backgroundColor,'green','c')"></span>
+                    <span class="colorSet" style="background-color:aqua;" title="天蓝色" onclick="colorful(this,this.style.backgroundColor,'aqua','c')"></span>
+                    <span class="colorSet" style="background-color:red;" title="红色" onclick="colorful(this,this.style.backgroundColor,'red','c')"></span>
+                    <span class="colorSet" style="background-color:HotPink;" title="粉色(浅紫色)" onclick="colorful(this,this.style.backgroundColor,'light_purple','c')"></span>
+                    <span class="colorSet" style="background-color:yellow;" title="黄色" onclick="colorful(this,this.style.backgroundColor,'yellow','c')"></span>
+                    <span class="colorSet" style="background-color:white;" title="白色" onclick="colorful(this,this.style.backgroundColor,'white','c')"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="topbar">
+        <div id="topicon">
+
+        </div>
+        <span id="toptitle">JSON 文本生成器</span>
+    </div>
+    <div id="loading">
+        <div class="center-title"><span style="color:rgb(33, 36, 35);font-size:36px;">正在玩命加载中...</span></div>
+    </div>
+</body>
+<script>
+    var check = false;
+
+    var texts = document.getElementById("texts");
+    window.onload = function() {
+        $("#loading").fadeOut();
+    }
+
+    function back() {
+        location = "..";
+    }
+
+    function next() {
+        location = "src/index.html";
+    }
+
+    function newTextMain() {
+        var ele = "<div></div>";
+        appendChild(ele);
+    }
+
+    function colorful(e, a, b, c) {
+        //console.log(e.offsetParent.getElementsByClassName("enter")[0]);
+        e.offsetParent.getElementsByClassName("colors")[0].value = b;
+        if (check) {
+            e.offsetParent.getElementsByClassName("enter")[0].style.color = a;
+        } else {
+            e.offsetParent.getElementsByClassName("colors")[0].style.backgroundColor = a;
+            e.offsetParent.getElementsByClassName("colors")[0].style.color = ColorReverse(a);
+        }
+
+    }
+
+    function ColorReverse(OC) {
+        if (OC === "black" || OC === "darkblue" || OC === "blue")
+            return "white";
+        if (OC === "gray")
+            return "green";
+        return "black";
+    }
+</script>
+
+</html>
