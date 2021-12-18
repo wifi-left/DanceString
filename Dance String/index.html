@@ -1,0 +1,914 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5, user-scalable=no">
+    <title>String Dance - Made By Gamom</title>
+    <link rel="stylesheet" type="text/css" href="st_ga.css">
+    <script src="js/gquery.js"></script>
+    <style>
+        #bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url("img/bg.png");
+        }
+
+        * {
+            user-select: none;
+        }
+
+        #canvas {
+            width: calc(100% - 0px);
+            height: calc(100% - 0px);
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            display: none;
+            z-index: 0;
+        }
+
+        .windows {
+            background: rgba(10, 10, 10, 0.8);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+        }
+
+        .button-o {
+            color: #ece7e7;
+            font-weight: bold;
+            font-family: "console";
+            font-size: 18px;
+            outline: none;
+            border: none;
+            border-radius: 0%;
+            border-bottom: 4px solid #ece7e7;
+            width: 180px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0);
+            cursor: pointer;
+        }
+
+        .button-o:hover,
+        .button-o:active {
+            color: #b6b6b6;
+            border-bottom: 4px solid #b6b6b6;
+        }
+
+        #menu {
+            color: #ece7e7;
+            height: 100%;
+            display: none;
+            width: 100%;
+            z-index: 10;
+        }
+
+        #goon {
+            position: absolute;
+            bottom: 9em;
+            left: 1em;
+        }
+
+        .replay {
+            position: absolute;
+            bottom: 5em;
+            left: 1em;
+        }
+
+        #stop {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+        }
+
+        #stop2 {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+        }
+
+        #start {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+        }
+
+        #start1 {
+            position: absolute;
+            bottom: 1em;
+            left: 12em;
+        }
+
+        #bhelp {
+            position: absolute;
+            bottom: 1em;
+            left: 23em;
+        }
+
+        .center-title {
+            color: white;
+            font-family: "console";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+
+        .titlebg {
+            background-image: url("img/title.png");
+            height: 255px;
+            width: 400px;
+        }
+
+        #help {
+            z-index: 20;
+            color: #ece7e7;
+            height: calc(100% - 4em);
+            width: calc(100% - 4em);
+            padding: 2em 2em 2em 2em;
+        }
+
+        #notice {
+            z-index: 20;
+            color: #ece7e7;
+            height: calc(100% - 4em);
+            width: calc(100% - 4em);
+            padding: 2em 2em 2em 2em;
+        }
+
+        #big-not {
+            font-size: 24px;
+        }
+
+        h1 {
+            color: #ece7e7;
+        }
+
+        p {
+            color: #ece7e7;
+            font-size: 18px;
+        }
+
+        b {
+            color: #ece7e7;
+            font-size: 18px;
+        }
+
+        #pause {
+            height: calc(100% - 4em);
+            width: calc(100% - 4em);
+            padding: 2em 2em 2em 2em;
+            z-index: 30;
+        }
+
+        #gameover {
+            height: calc(100% - 4em);
+            width: calc(100% - 4em);
+            padding: 2em 2em 2em 2em;
+            z-index: 40;
+        }
+
+        #loading {
+            height: calc(100% - 4em);
+            width: calc(100% - 4em);
+            padding: 2em 2em 2em 2em;
+            z-index: 180;
+            background-color: rgb(40, 165, 123);
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body onresize="resize()">
+    <audio src="bgm/flower_dance.mp3" controls="" loop="true" id="music"> </audio>
+    <div id="bg" class="bg" bgcolor="black">
+        <div id="loading">
+            <div class="center-title">
+                <h1>Loading...</h1><span>Please Wait...</span>
+            </div>
+
+        </div>
+        <div id="menu" class="windows">
+            <div class="center-title">
+                <div class="titlebg"></div>
+                <p id="more-notice"></p>
+            </div>
+            <button class="button-o" id="start" onclick="game_start(0);">✔ 开始游戏（普通）</button>
+            <button class="button-o" id="start1" onclick="game_start(1);">✔ 开始游戏（挑战）</button>
+            <button class="button-o" id="bhelp" onclick="show_help();">？ 查看游戏帮助</button>
+        </div>
+        <div id="help" class="windows" style="display:none;" onclick="dis_help();">
+            <h1>
+                帮助 - Help
+            </h1>
+            <p>
+                使用键盘上的 "↑"(空格键、"W") "←"("A") "→"("D") 进行操作。 <br />使用 "P" 进行暂停。<br /> 您可以借助上行的线进行攀爬（穿墙）
+                <br />当您脚下没有线时，您将会掉落。<br />请小心！线的生成是完全随机的！<br /><br /><b> ※ 模式介绍：</b><br />
+                </br /> > 普通模式：正常的游戏；<br /> > 挑战模式：您将永远自动弹跳！
+            </p>
+        </div>
+        <div id="notice" class="windows" style="display:none;">
+            <p class="center-title" id="big-not">
+
+            </p>
+        </div>
+        <div id="pause" class="windows" style="display:none;">
+            <h1>
+                暂停
+            </h1>
+            <button class="button-o" id="goon" onclick="goon_game();">✔ 继续游戏</button>
+            <button class="button-o replay" onclick="game_start(ajump?1:0);">◎ 重新开始</button>
+            <button class="button-o" id="stop" onclick="game_over();">✖ 放弃游戏</button>
+        </div>
+        <div id="gameover" class="windows" style="display:none;">
+            <div class="center-title">
+                <div class="titlebg"></div>
+                <h1>你死了。</h1>
+                <p id="msg"></p>
+
+            </div>
+            <button class="button-o replay" onclick="game_start(ajump?1:0);">◎ 重新开始</button>
+            <button class="button-o" id="stop2" onclick="game_over();">✖ 返回主界面</button>
+        </div>
+        <canvas id="canvas">
+            <h1>
+                很抱歉，您的浏览器貌似不支持 canvas 对象...
+                请使用Chrome或Edge浏览器
+            </h1>
+        </canvas>
+    </div>
+
+</body>
+<script>
+    var C_g = 1;//重力常数
+    var isPhone = f_isPhone();
+    if (isPhone) $("#more-notice").html("注意！您当前使用的移动端进行游玩！可能体验不如电脑！");
+    function f_isPhone() {
+        //获取浏览器navigator对象的userAgent属性（浏览器用于HTTP请求的用户代理头的值）
+        var info = navigator.userAgent;
+        //通过正则表达式的test方法判断是否包含“Mobile”字符串
+        var isPhone = /mobile/i.test(info);
+        //如果包含“Mobile”（是手机设备）则返回true
+        return isPhone;
+    }
+    var canvas = document.querySelector("canvas");
+    const ctx = canvas.getContext("2d");
+    var title = document.getElementById("big-not");
+
+    var tips = [
+        '使用键盘上的 "↑"(空格键、"W") "←"("A") "→"("D") 进行操作。 使用 "P" 进行暂停。<br/>如果您是触控屏，请点击点击四周移动。',
+        '遇到任何 bug ，请到 GitHub 上反馈！',
+        '你知道吗？手机设备的提示和 PC 不一样哦~',
+        "建议使用 PC 游玩，获得更流畅的体验！",
+        "你知道吗？手机会默认打开触控位置提示信息帮助定位！"
+    ];
+    var bg = new Image();
+    bg.src = "img/bg.png";
+
+    var debug = false;
+
+    var level = 0;
+    var en = new Array([
+        []
+    ]);
+    for (var i = 0; i < 1; i++) {
+        for (var j = 0; j <= 1; j++) {
+            en[i][j] = new Image();
+            en[i][j].src = "img/entity-" + i + "-" + j + ".png";
+        }
+
+    }
+    var maxWidth = document.body.clientWidth - 0;
+    var maxHeight = document.body.clientHeight - 0;
+    window.onload = function () {
+        ctx.drawImage(bg, 0, 0, maxWidth, maxHeight);
+        $("#loading").fadeOut();
+        reset();
+    }
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
+
+    function resize() {
+        maxWidth = document.body.clientWidth - 0;
+        maxHeight = document.body.clientHeight - 0;
+        canvas.width = maxWidth;
+        canvas.height = maxHeight;
+    }
+    var Inter = 0;
+    var player = new entity(maxWidth / 2, maxHeight / 2, 0, 40, 40);
+    ts = [];
+
+    function entity(x, y, type, width, height) {
+        this.x = x;
+        this.y = y;
+        this.truex = 0;
+        this.truey = 0;
+        this.Xmotion = 0;
+        this.Ymotion = 0;
+        this.state = 0;
+        this.type = type;
+        this.width = width;
+        this.height = height;
+        this.falling = false;
+        this.jumpM = 0;
+        this.jumping = 0;
+        this.die = false;
+        this.move = function () {
+
+            if (this.Xmotion > 0) this.state = 0;
+            else if (this.Xmotion < 0) this.state = 1;
+            this.x = this.x + this.Xmotion;
+            this.y = this.y + this.Ymotion;
+            if (this.y < -1000) this.die = true;
+            this.Xmotion = 0;
+            this.Ymotion = 0;
+        }
+        this.jump = function () {
+            this.jumping = 1;
+            this.jumpM = 12;
+        }
+        this.playerMove = function () {
+
+            if (this.Xmotion > 0) this.state = 0;
+            else if (this.Xmotion < 0) this.state = 1;
+            this.truex += this.Xmotion;
+            this.truey += this.Ymotion;
+            for (var i = 0; i < blocks.length; i++) {
+                blocks[i].x -= this.Xmotion;
+                blocks[i].y -= this.Ymotion;
+            }
+            for (var i = 0; i < ts.length; i++) {
+                ts[i].x -= this.Xmotion;
+                ts[i].y -= this.Ymotion;
+            }
+            bgl += this.Xmotion;
+            this.Xmotion = 0;
+            this.Ymotion = 0;
+            var flag = false,
+                addnew = true;
+            var rightest = blocks[blocks.length - 1];
+            var downest = new block(0, 100000, 0, 0, 0);
+
+            for (var i = 0; i < blocks.length; i++) {
+
+
+
+                if (blocks[i].ismoving) {
+                    if (blocks[i].dx != -1 && blocks[i].dy != -1 && blocks[i].x <= this.x + this.width && blocks[i].y <= player.y && blocks[i].x + blocks[i].dx >= player.x && blocks[i].y + 7 + blocks[i].motionY >= player.y) {
+                        blocks[i].bringpeople();
+                        flag = true;
+                        this.falling = false;
+                    }
+                } else {
+                    if (blocks[i].dx != -1 && blocks[i].dy != -1 && blocks[i].x <= this.x + this.width && blocks[i].y <= player.y && blocks[i].x + blocks[i].dx >= player.x && blocks[i].y + 7 >= player.y) {
+                        //blocks[i].bringpeople();
+                        flag = true;
+                        this.falling = false;
+                    }
+                }
+
+                if (blocks[i].y <= downest.y) {
+                    downest = blocks[i];
+                }
+                if (!flag) {
+                    this.falling = true;
+                } else {
+                    this.falling = false;
+                }
+
+            }
+
+            if (this.y <= downest.y - 200) {
+                if (parseInt(this.truex / 100) > hisc) {
+                    $.cookie.set("highscore", parseInt(this.truex / 100));
+                    gameover("游戏结束。你撞见了新的记录！你的分数：" + parseInt(this.truex / 100) + "<br/>你的等级：" + parseInt(levelN));
+                    hisc = parseInt(this.truex / 100);
+                } else {
+                    gameover("游戏结束。此次你没有创建新的记录。你的分数：" + parseInt(this.truex / 100) + "<br/>你的等级：" + parseInt(levelN) + "<br/>最高分：" + hisc);
+
+                }
+
+                return;
+            }
+            ctx.font = "18px sans-serif";
+            ctx.fillStyle = "aqua";
+            ctx.fillText("Level: " + parseInt(levelN), 20, maxHeight - 54);
+            ctx.fillStyle = "aquamarine";
+            ctx.fillText("Score: " + parseInt(this.truex / 100) + " / " + hisc, 20, maxHeight - 36);
+            ctx.fillStyle = "white";
+            ctx.fillRect(20, maxHeight - 28, 424, 24);
+            if ((this.truex / 100) > hisc) {
+                ctx.fillStyle = "aqua";
+                ctx.fillRect(22, maxHeight - 26, (this.truex / 100 % 200) * 2, 20);
+            } else if (parseInt(this.truex / 100 / 200) == parseInt(hisc / 200)) {
+                ctx.fillStyle = "purple";
+                ctx.fillRect(22, maxHeight - 26, (hisc % 200) * 2, 20);
+
+
+                ctx.fillStyle = "lime";
+                ctx.fillRect(22, maxHeight - 26, (this.truex / 100 % 200) * 2, 20);
+            } else {
+                ctx.fillStyle = "lime";
+                ctx.fillRect(22, maxHeight - 26, (this.truex / 100 % 200) * 2, 20);
+            }
+
+
+            if (rightest.x + rightest.dx <= player.x + maxWidth) {
+                if (rightest.dx == -1 || rightest.dy == -1) {
+                    if (rightest.dx == -1)
+                        newBlock(rightest.x, rightest.y + rightest.dy, -1);
+                    else
+                        newBlock(rightest.x + rightest.dx, rightest.y, 1);
+                } else if (rightest.dx == 4) {
+                    if (rightest.way == 3) newBlock(rightest.x, rightest.y, 0);
+                    else newBlock(rightest.x, rightest.y + rightest.dy, 0);
+                } else newBlock(rightest.x + rightest.dx, rightest.y, 0);
+            }
+            if (this.jumping > 0) {
+                if (this.jumpM > 0) {
+                    this.jumping++;
+                    this.Ymotion = this.jumpM;
+                    if (this.jumpM > 0)
+                        this.jumpM -= 0.3;
+                } else {
+                    this.jumping = 0;
+                    this.falling = true;
+                }
+
+
+            } else if (this.falling) {
+                this.Ymotion = -this.jumpM;
+                if (this.jumpM < 6)
+                    this.jumpM += 0.3;
+            } else {
+                this.jumpM = 0;
+            }
+
+        }
+
+    };
+
+    function block(x, y, dx, dy, color) {
+        this.x = x;
+        this.y = y;
+        this.rx = x;
+        this.ry = y;
+        this.die = false;
+        this.dx = dx;
+        this.dy = dy;
+        this.color = color;
+        this.way = 0;
+        this.motionX = 0;
+        this.motionY = 0;
+        this.st_x = x;
+        this.st_y = y;
+        this.ed_x = x;
+        this.ed_y = y;
+        this.ismoving = false;
+        this.debugMove = function () {
+            this.ismoving = true;
+            this.motionX = 2;
+            this.ed_x = this.st_x + 500;
+        }
+        this.move = function () {
+            this.rx += this.motionX;
+            this.ry += this.motionY;
+            this.x = this.x + this.motionX;
+            this.y = this.y + this.motionY;
+            if (this.rx > this.ed_x) {
+                this.motionX = -Math.abs(this.motionX);
+            }
+            if (this.ry > this.ed_y) {
+                this.motionY = -Math.abs(this.motionY);
+            }
+            if (this.rx < this.st_x) this.motionX = Math.abs(this.motionX);
+            if (this.ry < this.st_y) this.motionY = Math.abs(this.motionY);
+
+        }
+        this.bringpeople = function () {
+            if (this.ismoving) {
+                player.Xmotion += this.motionX;
+                player.Ymotion += this.motionY;
+            }
+
+        }
+        this.paint = function (ctx) {
+            if (this.ismoving)
+                this.move();
+            if (dx == -1 || dy == -1) return;
+            if (this.x + this.dx <= -500) this.die = true;
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, maxHeight - this.y - this.dy, this.dx, this.dy);
+        }
+    }
+    var ts = [];
+    var blocks = [];
+    var BlockDr = 4;
+    function newBlock(x, y, tmp) {
+        // var BlockDr = parseInt(Math.random() * 20 + 2);
+        BlockDr = 4;
+        //console.log(BlockDr);
+        var dx = 0,
+            dy = 0;
+        var way = parseInt(Math.random() * 6 + 1);
+        if (way == 4) {
+            dx = BlockDr;
+            dy = parseInt(Math.random() * 16 * 5 + 16);
+
+        }
+        if (way == 0) {
+            dx = BlockDr;
+            dy = parseInt(Math.random() * 16 * 5 + 16);
+            y = y - dy;
+        }
+        if (way == 1) {
+            dx = parseInt(Math.random() * 16 * 5 + 88);
+            dy = BlockDr;
+        }
+        if (way == 2) {
+            dx = parseInt(Math.random() * 16 * 5 + 88);
+            x = x - dx;
+            dy = BlockDr;
+        }
+        if (way == 3) {
+            dx = BlockDr;
+
+
+            dy = parseInt(Math.random() * 16 * 16 + 16);
+            y -= dy;
+        }
+        if (way == 5) {
+            if (tmp == -1) {
+                dx = parseInt(Math.random() * 16 * 4 + 100);
+                dy = BlockDr;
+            } else {
+                dx = -1;
+                dy = parseInt(Math.random() * 16 * 5.5 + 32);
+            }
+
+        }
+        if (way == 6) {
+            if (tmp == -1) {
+                dx = BlockDr;
+                dy = parseInt(Math.random() * 16 * 4 + 16);
+            } else {
+                dy = -1;
+                dx = parseInt(Math.random() * 16 * 5.5 + 32);
+            }
+
+        }
+        var moving = parseInt(Math.random() * 40 + 1);
+        if (way == 6 || way == 3 || way == 0 || way == 4) moving = 0;
+        var color = getranColor();
+        blocks[blocks.length] = new block(x, y, dx, dy, color);
+        blocks[blocks.length - 1].way = way;
+        if (moving == 1) {
+            blocks[blocks.length - 1].ismoving = true;
+            blocks[blocks.length - 1].motionX = parseInt(Math.random() * 30) / 10.0 + 1;
+            blocks[blocks.length - 1].ed_x = blocks[blocks.length - 1].st_x + parseInt(Math.random() * 16 * 80 + 32);
+        }
+        if (moving == 2) {
+            blocks[blocks.length - 1].ismoving = true;
+            blocks[blocks.length - 1].motionY = parseInt(Math.random() * 30) / 10.0 + 1;
+            blocks[blocks.length - 1].ed_y = blocks[blocks.length - 1].st_y + parseInt(Math.random() * 16 * 80 + 32);
+        }
+        if (moving == 3) {
+            blocks[blocks.length - 1].ismoving = true;
+            blocks[blocks.length - 1].motionX = parseInt(Math.random() * 30) / 10.0 + 1;
+            blocks[blocks.length - 1].motionY = parseInt(Math.random() * 30) / 10.0 + 1;
+            blocks[blocks.length - 1].ed_x = blocks[blocks.length - 1].st_x + parseInt(Math.random() * 16 * 80 + 32);
+
+            blocks[blocks.length - 1].ed_y = blocks[blocks.length - 1].st_y + parseInt(Math.random() * 16 * 80 + 32);
+
+        }
+
+
+    }
+
+    function getranColor() {
+        var tmp = "#";
+        var zm = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "0", "1"];
+        for (var j = 0; j < 6; j++)
+            tmp += zm[parseInt(Math.random() * 17 + 0)];
+        return tmp;
+    }
+    window.oncontextmenu = () => { return false };
+    function removeT() {
+        var l = 0;
+        for (var i = 0; i - l < blocks.length; i++) {
+            if (blocks[i - l].die) {
+                blocks.splice(i - l, 1);
+                l++;
+            }
+        }
+        l = 0;
+        for (var i = 0; i - l < ts.length; i++) {
+            if (ts[i - l].die) {
+                ts.splice(i - l, 1);
+                l++;
+            }
+        }
+    }
+    /*
+
+    主体部分
+
+    */
+    var bgl = 0;
+
+    function during_game() {
+        if (!pau) {
+            levelN = parseInt(player.truex / 20000);
+            ctx.drawImage(bg, -bgl - maxWidth, 0, maxWidth, maxHeight);
+            ctx.drawImage(bg, -bgl, 0, maxWidth, maxHeight);
+            ctx.drawImage(bg, maxWidth - bgl, 0, maxWidth, maxHeight);
+            if (bgl >= maxWidth) bgl = 0;
+            player.playerMove();
+            ctx.fillStyle = "white";
+
+            removeT();
+            ctx.drawImage(en[0][player.state], player.x, maxHeight - player.y - player.height, 40, 40);
+
+            for (var i = 0; i < ts.length; i++) {
+
+                ctx.drawImage(en[ts[i].type][ts[i].state], ts[i].x, maxHeight - ts[i].y - ts[i].height, ts[i].width, ts[i].height);
+                ts[i].move();
+            }
+            for (var i = 0; i < blocks.length; i++) {
+                blocks[i].paint(ctx);
+            }
+            if (keyso[37] || keyso[65]) {
+                player.Xmotion -= (isPhone ? 4 : 4);;
+            }
+            if (keyso[32] || keyso[38] || keyso[87] || ajump) {
+                if (player.falling == false && player.jumping <= 0) {
+                    player.jump();
+                }
+            }
+            if (keyso[39] || keyso[68]) {
+                player.Xmotion += (isPhone ? 4 : 4);
+            }
+            if (keyso[80]) {
+                pau = true;
+                $("#pause").fadeIn();
+                $("#canvas").fadeOut();
+            }
+            if (showPane) {
+                drawTouchPane();
+            }
+            if (debug) {
+                showMoreInfo();
+            }
+
+        }
+
+    }
+    var showPane = isPhone;
+    function drawTouchPane() {
+        ctx.fillStyle = "rgba(255,0,0,0.1)";
+        ctx.fillRect(0, 0, maxWidth / 2 - maxWidth / 6, maxHeight * 0.3);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.fillText("←↑", 20, 30);
+        ctx.fillStyle = "rgba(0,255,0,0.1)";
+        ctx.fillRect(maxWidth / 2 - maxWidth / 6, 0, maxWidth / 3, maxHeight * 0.3);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.fillText("↑", maxWidth / 2 - maxWidth / 6 + 20, 30);
+        ctx.fillStyle = "rgba(0,0,255,0.1)";
+        ctx.fillRect(maxWidth / 2 + maxWidth / 6, 0, maxWidth / 3, maxHeight * 0.3);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.fillText("↑→", maxWidth / 2 + maxWidth / 6 + 20, 30);
+    }
+    function showMoreInfo() {
+
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.fillText("Motion:[" + player.Xmotion.toFixed(2) + "," + player.Ymotion.toFixed(2) + "]", 20, maxHeight - 110);
+        ctx.fillText("Block Count:[" + blocks.length + "]", 20, maxHeight - 90);
+        ctx.fillText("Real Pos:[" + (player.truex / 100).toFixed(2) + "," + (player.truey / 100).toFixed(2) + "]", 20, maxHeight - 70);
+
+    }
+    var hisc = $.cookie.get("highscore");
+    var pau = false;
+
+    function reset() {
+
+        $("#menu").fadeIn();
+
+        clearInterval(Inter);
+
+        ts = [];
+        ts.pop();
+
+    }
+    var keyso = [];
+    document.onkeyup = function (event) {
+
+        event = event || window.event; /*||为或语句，当IE不能识别event时候，就执行window.event 赋值*/
+        //console.log(event.keyCode);
+        //console.log(event.keyCode);
+        keyso[event.keyCode] = false;
+    }
+    document.onkeydown = function (event) {
+        if (event.keyCode == 113) showPane = !showPane;
+        if (event.keyCode == 118) debug = !debug;
+        event = event || window.event; /*||为或语句，当IE不能识别event时候，就执行window.event 赋值*/
+        //console.log(event.keyCode);
+        keyso[event.keyCode] = true;
+
+
+    }
+    var ajump = false;
+    var levelN = 0;
+
+    function game_start(type) {
+        document.getElementById("big-not").innerHTML = (tips[parseInt(Math.random() * tips.length)]);
+        //hisc = $.cookie.get("highscore");
+        if (hisc == undefined) hisc = 0;
+        reset();
+        music.pause();
+        $("#pause").fadeOut();
+        $("#canvas").fadeOut();
+        $("#gameover").fadeOut();
+        levelN = 1;
+        music.load();
+        music.play();
+        $("#menu").fadeOut();
+        $("#notice").fadeIn();
+        setTimeout(() => {
+            $("#notice").fadeOut();
+            $("#canvas").fadeIn();
+            if (type == 1) {
+                ajump = true;
+            } else {
+                ajump = false;
+            }
+            Inter = setInterval(during_game, 10);
+            blocks = [];
+            blocks[0] = new block(100, 4, 2000, 4, "#ffffff");
+            pau = false;
+            player = new entity(maxWidth / 2, maxHeight / 2, 0, 40, 40);
+            player.state = 0;
+        }, 2000);
+
+    }
+
+    function show_help() {
+        $("#help").fadeIn();
+    }
+
+    function dis_help() {
+        $("#help").fadeOut();
+    }
+
+    function goon_game() {
+        $("#pause").fadeOut();
+        $("#canvas").fadeIn();
+
+        pau = false;
+    }
+    var music = document.getElementById("music");
+
+
+    function gameover(msg) {
+        music.pause();
+        pau = true;
+        clearInterval(Inter);
+        $("#gameover").fadeIn();
+        $("#canvas").fadeOut();
+        // var hi = $.cookie.get("highscore");
+        $("#msg").html(msg);
+    }
+
+    function game_over() {
+        music.pause();
+        $("#pause").fadeOut();
+        $("#canvas").fadeOut();
+        $("#gameover").fadeOut();
+        reset();
+    }
+    var click = false;
+    window.onmousemove = function (event) {
+        if (click) {
+            var c = getpos(x, y, event);
+            click = true;
+            var x = c.x,
+                y = c.y;
+            keyso[65] = false;
+            keyso[68] = false;
+            keyso[87] = false;
+            if (x < maxWidth / 2 - maxWidth / 6) {
+                keyso[65] = true;
+
+                keyso[68] = false;
+
+            } else if (x >= maxWidth / 2 + maxWidth / 6) {
+                keyso[68] = true;
+                keyso[65] = false;
+            }
+            if (y < maxHeight * 0.3) {
+                keyso[87] = true;
+            }
+        }
+    }
+    window.onmousedown = function (event) {
+        var c = getpos(x, y, event);
+        click = true;
+        var x = c.x,
+            y = c.y;
+        keyso[65] = false;
+        keyso[68] = false;
+        keyso[87] = false;
+        if (x < maxWidth / 2 - maxWidth / 6) {
+            keyso[65] = true;
+
+            keyso[68] = false;
+
+        } else if (x >= maxWidth / 2 + maxWidth / 6) {
+            keyso[68] = true;
+            keyso[65] = false;
+        }
+        if (y < maxHeight * 0.3) {
+            keyso[87] = true;
+        }
+        //console.log(y < maxHeight / 2 + 40, y, maxHeight)
+    }
+
+    function getpos(x, y, event) { //鼠标定位赋值函数
+        var posX = 0,
+            posY = 0; //临时变量值
+        var e = event || window.event; //标准化事件对象
+        if (e.pageX || e.pageY) { //获取鼠标指针的当前坐标值
+            posX = e.pageX;
+            posY = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            posX = event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+            posY = event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+        }
+
+        return {
+            "x": posX,
+            "y": posY
+        };
+        //x = (posY); //用鼠标指针的y轴坐标和传入偏移值设置对象y轴坐标
+        //y = (posX); //用鼠标指针的x轴坐标和传入偏移值设置对象x轴坐标
+    }
+    $("canvas")[0].addEventListener("touchstart", function (event) {
+        click = true;
+        x = event.touches[0].pageX;
+        y = event.touches[0].pageY;
+        keyso[65] = false;
+        keyso[68] = false;
+        if (x < maxWidth / 2 - maxWidth / 6) {
+            keyso[65] = true;
+
+            keyso[68] = false;
+
+        } else if (x >= maxWidth / 2 + maxWidth / 6) {
+            keyso[68] = true;
+            keyso[65] = false;
+        }
+        if (y < maxHeight * 0.3) {
+            keyso[87] = true;
+        }
+    }, false);
+    $("canvas")[0].addEventListener("touchmove", function (event) {
+        if (click) {
+            x = event.touches[0].pageX;
+            y = event.touches[0].pageY;
+            keyso[65] = false;
+            keyso[68] = false;
+            if (x < maxWidth / 2 - maxWidth / 6) {
+                keyso[65] = true;
+
+                keyso[68] = false;
+
+            } else if (x >= maxWidth / 2 + maxWidth / 6) {
+                keyso[68] = true;
+                keyso[65] = false;
+            }
+            if (y < maxHeight * 0.3) {
+                keyso[87] = true;
+            }
+        }
+    }, false);
+    $("canvas")[0].addEventListener("touchend", function (event) {
+        click = false;
+        keyso[65] = false;
+        keyso[68] = false;
+        keyso[87] = false;
+    }, false);
+    window.onmouseup = function (event) {
+        keyso[65] = false;
+        keyso[68] = false;
+        keyso[87] = false;
+        click = false;
+    }
+</script>
+
+</html>
