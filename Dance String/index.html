@@ -279,7 +279,7 @@
         '你知道吗？手机设备的提示和 PC 不一样哦~',
         "建议使用 PC 游玩，获得更流畅的体验！",
         "你知道吗？手机会默认打开触控位置提示信息帮助定位！",
-        "你知道吗？按下 F7 或者 F2 可以打开开发者信息！"
+        "你知道吗？按下 Y键 或者 F2 可以打开开发者信息！"
     ];
     var bg = new Image();
     bg.src = "img/bg.png";
@@ -361,6 +361,7 @@
                 ts[i].y -= this.Ymotion;
             }
             bgl += this.Xmotion;
+            bgt -= this.Ymotion;
             this.Xmotion = 0;
             this.Ymotion = 0;
             var flag = false,
@@ -404,10 +405,14 @@
             }
             if (levelN > lastLevel) {
                 lastLevel = levelN;
-                untexted = false;
-                blocks[blocks.length] = new block(maxWidth, 40, maxHeight / 2 - 40, 0, "rgb(148, 231, 148);");
+                // untexted = false;
+                blocks[blocks.length] = new block(maxWidth, maxHeight / 2 - 20, 0, 0, "rgb(148, 231, 148)");
                 blocks[blocks.length - 1].type = 1;
-                blocks[blocks.length - 1].text = "恭喜您升级啦！当前等级为：" + levelN;
+                blocks[blocks.length - 1].text = "恭喜您升级啦！";
+                blocks[blocks.length] = new block(maxWidth, maxHeight / 2 - 60, 0, 0, "rgb(20 227 208)");
+                blocks[blocks.length - 1].type = 1;
+                blocks[blocks.length - 1].text = "当前等级为：" + levelN;
+                // 
             }
             if (this.y <= downest.y - 200) {
                 if (parseInt(this.truex / 100) > hisc) {
@@ -604,7 +609,7 @@
         }
         var moving = 0;
 
-        if (challangeMode) moving = parseInt(Math.random() * 5 + 1);
+        if (challangeMode) moving = parseInt(Math.random() * 4 + 1);
         else moving = parseInt(Math.random() * 40 + 1);
         if (way == 6 || way == 3 || way == 0 || way == 4) moving = 0;
         var color = getranColor();
@@ -673,20 +678,55 @@
             }
         }
     }
+
+    function gameClear() {
+        if (!player.falling) {
+            blocks = [];
+            blocks[blocks.length] = new block(player.x - 200, player.y - 10, random(400, 1000), 4, getranColor());
+        }
+
+        // blocks[blocks.length - 1].ismoving = true;
+        // blocks[blocks.length - 1].motionY = random(0, 3);
+        // blocks[blocks.length - 1].motionX = random(1, 6);
+        // blocks[blocks.length - 1].ed_y = blocks[blocks.length - 1].st_y + random(0, 2000);
+        // blocks[blocks.length - 1].ed_x = blocks[blocks.length - 1].st_x + random(5000, 10000);
+    }
+
+    function gameCheat() {
+        blocks[blocks.length] = new block(player.x - 200, player.y - 10, 400, 4, getranColor());
+        blocks[blocks.length - 1].ismoving = true;
+        blocks[blocks.length - 1].motionY = random(0, 3);
+        blocks[blocks.length - 1].motionX = random(1, 6);
+        blocks[blocks.length - 1].ed_y = blocks[blocks.length - 1].st_y + random(0, 2000);
+        blocks[blocks.length - 1].ed_x = blocks[blocks.length - 1].st_x + random(5000, 10000);
+    }
     /*
 
     主体部分
 
     */
     var bgl = 0;
+    var bgt = 0;
     lastLevel = 0;
     function during_game() {
         if (!pau) {
             levelN = parseInt(player.truex / 20000);
-            ctx.drawImage(bg, -bgl - maxWidth, 0, maxWidth, maxHeight);
-            ctx.drawImage(bg, -bgl, 0, maxWidth, maxHeight);
-            ctx.drawImage(bg, maxWidth - bgl, 0, maxWidth, maxHeight);
+            ctx.drawImage(bg, -bgl - maxWidth, -bgt, maxWidth, maxHeight);
+            ctx.drawImage(bg, -bgl, -bgt, maxWidth, maxHeight);
+            ctx.drawImage(bg, maxWidth - bgl, -bgt, maxWidth, maxHeight);
+
+            ctx.drawImage(bg, -bgl - maxWidth, -bgt - maxHeight, maxWidth, maxHeight);
+            ctx.drawImage(bg, -bgl, -bgt - maxHeight, maxWidth, maxHeight);
+            ctx.drawImage(bg, maxWidth - bgl, -maxHeight - bgt, maxWidth, maxHeight);
+
+            ctx.drawImage(bg, -bgl - maxWidth, maxHeight - bgt, maxWidth, maxHeight);
+            ctx.drawImage(bg, -bgl, maxHeight - bgt, maxWidth, maxHeight);
+            ctx.drawImage(bg, maxWidth - bgl, maxHeight - bgt, maxWidth, maxHeight);
+
             if (bgl >= maxWidth) bgl = 0;
+            if (bgl < 0) bgl = maxWidth;
+            if (bgt >= maxHeight) bgt = 0;
+            if (bgt < 0) bgt = maxHeight;
             player.playerMove();
             ctx.fillStyle = "white";
 
@@ -717,6 +757,7 @@
                 $("#pause").fadeIn();
                 $("#canvas").fadeOut();
             }
+            ctx.fontSize = "18px";
             if (showPane) {
                 drawTouchPane();
             }
@@ -772,13 +813,13 @@
         keyso[event.keyCode] = false;
     }
     document.onkeydown = function (event) {
-        if (event.keyCode == 113) showPane = !showPane;
-        if (event.keyCode == 118) debug = !debug;
         event = event || window.event; /*||为或语句，当IE不能识别event时候，就执行window.event 赋值*/
-        //console.log(event.keyCode);
+        if (event.keyCode == 113) showPane = !showPane;
+        if (event.keyCode == 89) debug = !debug;
+        if (event.keyCode == 72 && pau != true) gameCheat();
+        if (event.keyCode == 67 && pau != true) gameClear();
+        // console.log(event.keyCode);
         keyso[event.keyCode] = true;
-
-
     }
     var challangeMode = false;
     var levelN = 0;
